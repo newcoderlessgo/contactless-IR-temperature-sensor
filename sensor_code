@@ -1,0 +1,54 @@
+#include <NewPing.h>
+#include <Adafruit_MLX90614.h>
+
+#define TRIG 2
+#define ECHO 3
+#define BUZZER 5
+
+#define DISTANCE 10    
+#define CUTOFF_TEMP 28
+
+NewPing ultrasonicSensor(TRIG, ECHO, 400); 
+Adafruit_MLX90614 mlx = Adafruit_MLX90614();
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(BUZZER, OUTPUT);
+
+  if (!mlx.begin()) {
+    Serial.println("Sensor not detected!");
+    while (1);
+  }
+  Serial.println("System Ready.");
+}
+
+void loop() {
+  int distance = ultrasonicSensor.ping_cm();
+
+  if (distance > 0 && distance < DISTANCE) {
+    float temperature = mlx.readObjectTempC();
+
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.print(" cm | Temperature: ");
+    Serial.print(temperature);
+    Serial.println(" °C");
+
+    if (temperature > CUTOFF_TEMP) {
+      for (int i = 0; i < 20; i++) { 
+        digitalWrite(BUZZER, HIGH);
+        delay(10);
+        digitalWrite(BUZZER, LOW);
+        delay(10);
+      }
+    } else {
+      digitalWrite(BUZZER, LOW);
+    }
+
+    delay(2000);  
+  } else {
+    digitalWrite(BUZZER, LOW);
+  }
+
+  delay(500);
+}
