@@ -1,4 +1,5 @@
 CONTACTLESS IR TEMPERATURE SENSOR
+
 📌 Overview
 
 This project is an Arduino-based smart alert system that detects nearby objects and measures their temperature using an ultrasonic sensor and an MLX90614 infrared temperature sensor.
